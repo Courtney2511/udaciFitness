@@ -14,7 +14,6 @@ function SubmitBtn({ onPress }) {
   )
 }
 
-
 export default class AddEntry extends Component {
   state = {
     run: 0,
@@ -25,11 +24,12 @@ export default class AddEntry extends Component {
   }
 
   increment = (metric) => {
+    console.log('increment pressed')
     const { max, step } = getMetricMetaInfo(metric)
 
     this.setState((state) => {
       const count = state[metric] + step
-
+      console.log('count')
       return {
         ...state,
         [metric]: count > max ? max : count
@@ -38,9 +38,10 @@ export default class AddEntry extends Component {
   }
 
   decrement = (metric) => {
+    console.log('decrement pressed')
     this.setState((state) => {
       const count = state[metric] - getMetricMetaInfo(metric).step
-
+      console.log(count)
       return {
         ...state,
         [metric]: count < 0 ? 0 : count
@@ -93,7 +94,7 @@ export default class AddEntry extends Component {
                   />
                 : <UdaciStepper
                     value={value}
-                    onIncremenet={() => this.increment(key)}
+                    onIncrement={() => this.increment(key)}
                     onDecrement={() => this.decrement(key)}
                     {...rest}
                   />
