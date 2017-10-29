@@ -4,6 +4,8 @@ import { getMetricMetaInfo, timeToString } from '../utils/helpers'
 import UdaciSlider from './udaciSlider'
 import UdaciStepper from './udaciStepper'
 import DateHeader from './DateHeader'
+import { Ionicons } from '@expo/vector-icons'
+import TextButton from './textButton'
 
 function SubmitBtn({ onPress }) {
   return(
@@ -24,12 +26,10 @@ export default class AddEntry extends Component {
   }
 
   increment = (metric) => {
-    console.log('increment pressed')
     const { max, step } = getMetricMetaInfo(metric)
 
     this.setState((state) => {
       const count = state[metric] + step
-      console.log('count')
       return {
         ...state,
         [metric]: count > max ? max : count
@@ -38,10 +38,8 @@ export default class AddEntry extends Component {
   }
 
   decrement = (metric) => {
-    console.log('decrement pressed')
     this.setState((state) => {
       const count = state[metric] - getMetricMetaInfo(metric).step
-      console.log(count)
       return {
         ...state,
         [metric]: count < 0 ? 0 : count
@@ -73,8 +71,29 @@ export default class AddEntry extends Component {
     // clear local notification
   }
 
+  reset = () => {
+    const key = timeToString()
+
+    // update Redux
+    // Route to home
+    // Update 'DB'
+  }
+
   render() {
     const metaInfo = getMetricMetaInfo()
+
+    if (this.props.alreadyLogged) {
+      return(
+        <View>
+          <Ionicons
+            name='ios-happy-outline'
+            size={100}
+          />
+        <Text>You already logged your info for today</Text>
+        <TextButton onPress={this.reset}>Reset</TextButton>
+        </View>
+      )
+    }
 
     return(
       <View>
