@@ -8,7 +8,10 @@ function entries(state = {}, action) {
         ...action.entries
       }
     case: ADD_ENTRY
-      return {}
+      return {
+        ...state,
+        ...action.entry
+      }
     default:
       return state
   }
