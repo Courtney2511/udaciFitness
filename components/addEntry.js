@@ -6,7 +6,7 @@ import UdaciStepper from './udaciStepper'
 import DateHeader from './DateHeader'
 import { Ionicons } from '@expo/vector-icons'
 import TextButton from './textButton'
-import { submitEntry, RemoveEntry } from '../utils/api'
+import { submitEntry, removeEntry } from '../utils/api'
 import { connect } from 'react-redux'
 import { addEntry } from '../actions'
 import { white, purple } from '../utils/colors'
@@ -14,7 +14,7 @@ import { white, purple } from '../utils/colors'
 function SubmitBtn({ onPress }) {
   return(
     <TouchableOpacity
-      style={ Platform.OS === 'iOs' ? styles.iosSubmitBtn : styles.androidSubmitBtn }
+      style={ Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn }
       onPress={onPress}>
       <Text style={ styles.submitButtonTxt }>Submit</Text>
     </TouchableOpacity>
