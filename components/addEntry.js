@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
-import { View, TouchableOpacity, Text, Platform, StyleSheet } from 'react-native'
-import { getMetricMetaInfo, timeToString, getDailyReminderValue } from '../utils/helpers'
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Platform,
+  StyleSheet,
+} from 'react-native'
+import {
+  getMetricMetaInfo,
+  timeToString,
+  getDailyReminderValue,
+} from '../utils/helpers'
 import UdaciSlider from './udaciSlider'
 import UdaciStepper from './udaciStepper'
 import DateHeader from './DateHeader'
@@ -10,13 +20,17 @@ import { submitEntry, removeEntry } from '../utils/api'
 import { connect } from 'react-redux'
 import { addEntry } from '../actions'
 import { white, purple } from '../utils/colors'
+import { NavigationActions } from 'react-navigation'
 
 function SubmitBtn({ onPress }) {
-  return(
+  return (
     <TouchableOpacity
-      style={ Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn }
-      onPress={onPress}>
-      <Text style={ styles.submitButtonTxt }>Submit</Text>
+      style={
+        Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn
+      }
+      onPress={onPress}
+    >
+      <Text style={styles.submitButtonTxt}>Submit</Text>
     </TouchableOpacity>
   )
 }
@@ -30,24 +44,24 @@ class AddEntry extends Component {
     eat: 0,
   }
 
-  increment = (metric) => {
+  increment = metric => {
     const { max, step } = getMetricMetaInfo(metric)
 
-    this.setState((state) => {
+    this.setState(state => {
       const count = state[metric] + step
       return {
         ...state,
-        [metric]: count > max ? max : count
+        [metric]: count > max ? max : count,
       }
     })
   }
 
-  decrement = (metric) => {
-    this.setState((state) => {
+  decrement = metric => {
+    this.setState(state => {
       const count = state[metric] - getMetricMetaInfo(metric).step
       return {
         ...state,
-        [metric]: count < 0 ? 0 : count
+        [metric]: count < 0 ? 0 : count,
       }
     })
   }
@@ -63,9 +77,11 @@ class AddEntry extends Component {
     const entry = this.state
 
     // update Redux
-    this.props.dispatch(addEntry({
-      [key]: entry
-    }))
+    this.props.dispatch(
+      addEntry({
+        [key]: entry,
+      })
+    )
 
     this.setState(() => ({
       run: 0,
@@ -74,7 +90,7 @@ class AddEntry extends Component {
       sleep: 0,
       eat: 0,
     }))
-    // navigate to home
+    this.toHome()
     submitEntry({ key, entry })
     // clear local notification
   }
@@ -83,56 +99,69 @@ class AddEntry extends Component {
     const key = timeToString()
 
     // update Redux
-    this.props.dispatch(addEntry({
-      [key]: getDailyReminderValue()
-    }))
-    // Route to home
+    this.props.dispatch(
+      addEntry({
+        [key]: getDailyReminderValue(),
+      })
+    )
+    this.toHome()
     removeEntry(key)
+  }
+
+  toHome = () => {
+    this.props.navigation.dispatch(
+      NavigationActions.back({
+        key: 'AddEntry',
+      })
+    )
   }
 
   render() {
     const metaInfo = getMetricMetaInfo()
 
     if (this.props.alreadyLogged) {
-      return(
-        <View style={ styles.center }>
+      return (
+        <View style={styles.center}>
           <Ionicons
-            name={ Platform.OS === 'ios' ? 'ios-happy-outline' : 'md-happy'}
+            name={Platform.OS === 'ios' ? 'ios-happy-outline' : 'md-happy'}
             size={100}
           />
-        <Text>You already logged your info for today</Text>
-        <TextButton style={{ padding: 10 }} onPress={this.reset}>Reset</TextButton>
+          <Text>You already logged your info for today</Text>
+          <TextButton style={{ padding: 10 }} onPress={this.reset}>
+            Reset
+          </TextButton>
         </View>
       )
     }
 
-    return(
+    return (
       <View style={styles.container}>
-        <DateHeader date={(new Date()).toLocaleDateString()}/>
-        {Object.keys(metaInfo).map((key) => {
+        <DateHeader date={new Date().toLocaleDateString()} />
+        {Object.keys(metaInfo).map(key => {
           const { getIcon, type, ...rest } = metaInfo[key]
           const value = this.state[key]
 
-          return(
-            <View key={key} style={ styles.row }>
+          return (
+            <View key={key} style={styles.row}>
               {getIcon()}
-              {type === 'slider'
-                ? <UdaciSlider
-                    value={value}
-                    onChange={(value) => this.slide(key, value)}
-                    {...rest}
-                  />
-                : <UdaciStepper
-                    value={value}
-                    onIncrement={() => this.increment(key)}
-                    onDecrement={() => this.decrement(key)}
-                    {...rest}
-                  />
-              }
+              {type === 'slider' ? (
+                <UdaciSlider
+                  value={value}
+                  onChange={value => this.slide(key, value)}
+                  {...rest}
+                />
+              ) : (
+                <UdaciStepper
+                  value={value}
+                  onIncrement={() => this.increment(key)}
+                  onDecrement={() => this.decrement(key)}
+                  {...rest}
+                />
+              )}
             </View>
           )
         })}
-      <SubmitBtn onPress={ this.submit }/>
+        <SubmitBtn onPress={this.submit} />
       </View>
     )
   }
@@ -147,7 +176,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   iosSubmitBtn: {
     backgroundColor: purple,
@@ -166,12 +195,12 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     alignSelf: 'flex-end',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   submitButtonTxt: {
     color: white,
     fontSize: 22,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   center: {
     flex: 1,
@@ -185,7 +214,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   const key = timeToString()
   return {
-    alreadyLogged: state[key] && typeof state[key].today === 'undefined'
+    alreadyLogged: state[key] && typeof state[key].today === 'undefined',
   }
 }
 
