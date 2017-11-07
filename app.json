@@ -1,5 +1,20 @@
 {
   "expo": {
-    "sdkVersion": "21.0.0"
+    "sdkVersion": "21.0.0",
+    "orientation": "portrait",
+    "name": "UdaciFitness",
+    "description": "Best Triathalon tracker",
+    "slug": "udaciFitness",
+    "version": 1.0,
+    "icon": "url to picture here",
+    "notification": {
+      "icon": "url to picture here"
+    },
+    "ios": {
+      "bundleIdentifier": "org.udacifitness.exp"
+    },
+    "android": {
+      "package": "org.udacifitness.exp"
+    }
   }
 }
