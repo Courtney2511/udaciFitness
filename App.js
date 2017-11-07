@@ -3,6 +3,7 @@ import { View, Platform, StatusBar } from 'react-native'
 import AddEntry from './components/addEntry'
 import History from './components/history'
 import EntryDetail from './components/entryDetail'
+import Live from './components/live'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
@@ -36,6 +37,15 @@ const Tabs = TabNavigator(
         tabBarLabel: 'Add Entry',
         tabBarIcon: ({ tintColor }) => (
           <FontAwesome name="plus-square" size={30} color={tintColor} />
+        ),
+      },
+    },
+    Live: {
+      screen: Live,
+      navigationOptions: {
+        tabBarLabel: 'Live',
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="ios-bookmarks" size={30} color={tintColor} />
         ),
       },
     },
