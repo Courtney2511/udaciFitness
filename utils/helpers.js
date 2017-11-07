@@ -149,9 +149,9 @@ export function getDailyReminderValue() {
   }
 }
 
-export function clearNotifications() {
-  AsyncStorage.removeItem(NOTIFCATION_KEY).then(
-    Notifications.cancelAllNotificationsAsync()
+export function clearLocalNotification() {
+  return AsyncStorage.removeItem(NOTIFCATION_KEY).then(
+    Notifications.cancelAllNotificationsAsync
   )
 }
 

@@ -10,6 +10,8 @@ import {
   getMetricMetaInfo,
   timeToString,
   getDailyReminderValue,
+  clearLocalNotification,
+  setLocalNotification,
 } from '../utils/helpers'
 import UdaciSlider from './udaciSlider'
 import UdaciStepper from './udaciStepper'
@@ -91,8 +93,10 @@ class AddEntry extends Component {
       eat: 0,
     }))
     this.toHome()
+
     submitEntry({ key, entry })
     // clear local notification
+    clearLocalNotification().then(setLocalNotification())
   }
 
   reset = () => {
