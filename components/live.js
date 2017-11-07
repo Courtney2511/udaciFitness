@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   StyleSheet,
+  Animated,
 } from 'react-native'
 import { Foundation } from '@expo/vector-icons'
 import { purple, white } from '../utils/colors'
@@ -16,6 +17,7 @@ export default class Live extends Component {
     coords: { speed: 0 },
     status: 'granted',
     direction: '',
+    bounceValue: new Animated.Value(1),
   }
 
   componentDidMount() {
@@ -57,8 +59,14 @@ export default class Live extends Component {
       },
       ({ coords }) => {
         const newDirection = calculateDirection(coords.heading)
-        const direction = this.state
-        console.log(coords)
+        const { direction, bounceValue } = this.state
+
+        if (newDirection !== direction) {
+          Animated.sequence([
+            Animated.timing(bounceValue, { duration: 200, toValue: 1.04 }),
+            Animated.spring(bounceValue, { toValue: 1, friction: 4 }),
+          ]).start()
+        }
 
         this.setState(() => ({
           coords,
@@ -70,7 +78,7 @@ export default class Live extends Component {
   }
 
   render() {
-    const { coords, status, direction } = this.state
+    const { coords, status, direction, bounceValue } = this.state
 
     if (status === null) {
       return <ActivityIndicator style={{ marginTop: 20 }} />
@@ -104,7 +112,11 @@ export default class Live extends Component {
       <View style={styles.container}>
         <View style={styles.directionContainer}>
           <Text style={styles.header}>You're heading</Text>
-          <Text style={styles.direction}>{direction}</Text>
+          <Animated.Text
+            style={[styles.direction, { transform: [{ scale: bounceValue }] }]}
+          >
+            {direction}
+          </Animated.Text>
         </View>
         <View style={styles.metricContainer}>
           <View style={styles.metric}>
@@ -116,7 +128,7 @@ export default class Live extends Component {
           <View style={styles.metric}>
             <Text style={[styles.header, { color: white }]}>Speed</Text>
             <Text style={[styles.subHeader, { color: white }]}>
-              {coords.speed * 2.2369} MPH
+              {(coords.speed * 2.2369).toFixed(1)} MPH
             </Text>
           </View>
         </View>
